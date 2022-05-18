@@ -17,5 +17,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+private slots:
+    void calculate_1();
+    void changeParams();
+private:
+    bool getDoubleFromText(QString str, double & dt);
+    void errorParam(QString mes);
 };
 #endif // MAINWINDOW_H
+
