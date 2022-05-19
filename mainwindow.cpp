@@ -1,69 +1,101 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtMath>
+#include "exercises.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+// Ex_1
     connect(ui->calculate_1, &QPushButton::clicked, this, &MainWindow::calculate_1);
-    connect(ui->param_A, &QLineEdit::textChanged, this, &MainWindow::changeParams);
-    connect(ui->param_B, &QLineEdit::textChanged, this, &MainWindow::changeParams);
-    connect(ui->param_C, &QLineEdit::textChanged, this, &MainWindow::changeParams);
+    connect(ui->param_A, &QLineEdit::textChanged, this, &MainWindow::changeParams_1);
+    connect(ui->param_B, &QLineEdit::textChanged, this, &MainWindow::changeParams_1);
+    connect(ui->param_C, &QLineEdit::textChanged, this, &MainWindow::changeParams_1);
+    QWidget * w1[] = {ui->calculate_1, ui->param_A, ui->param_B, ui->param_C};
+    setTab(w1, sizeof(w1)/sizeof(w1[0]));
+
+// Ex_2
+    connect(ui->calculate_3, &QPushButton::clicked, this, &MainWindow::calculate_2);
+    connect(ui->param_S1, &QLineEdit::textChanged, this, &MainWindow::changeParams_2);
+    connect(ui->param_S2, &QLineEdit::textChanged, this, &MainWindow::changeParams_2);
+    connect(ui->param_ANG, &QLineEdit::textChanged, this, &MainWindow::changeParams_2);
+    connect(ui->param_RAD, &QRadioButton::toggled, this, &MainWindow::changeParams_2);
+    connect(ui->param_DEG, &QRadioButton::toggled, this, &MainWindow::changeParams_2);
+    QWidget * w2[] = {ui->calculate_3, ui->param_S1, ui->param_S2, ui->param_ANG, ui->param_DEG, ui->param_RAD};
+    setTab(w2, sizeof(w2)/sizeof(w2[0]));
+
+// Ex_3
+    connect(ui->add, &QPushButton::clicked, this, &MainWindow::addText);
+    connect(ui->set, &QPushButton::clicked, this, &MainWindow::setText);
+    connect(ui->redbold, &QPushButton::clicked, this, &MainWindow::redBold);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::setTab(QWidget ** w, int n)
+{
+    for(int i=0; i<n; ++i)
+    {
+        if(i == n-1)
+            this->setTabOrder(w[i], w[0]);
+        else
+            this->setTabOrder(w[i], w[i+1]);
+    }
+}
 void MainWindow::calculate_1()      //Вычисление корней квадратного уравнения
 {
-    double a;
-    double b;
-    double c;
-    bool ok = getDoubleFromText(ui->param_A->text(), a);
-    ok &= getDoubleFromText(ui->param_B->text(), b);
-    ok &= getDoubleFromText(ui->param_C->text(), c);
-    if(ok)
-    {
-        if(a == 0)
-        {
-            ui->label_RES1->setText(QString::number(-c/b));
-            ui->label_RES2->setText("нет корня");
-        }
-        else
-        {
-           double d = b*b-4*a*c;
-           if(d >= 0)
-           {
-               d = qSqrt(d);
-               ui->label_RES1->setText(QString::number((-b+d)/(2*a)));
-               ui->label_RES2->setText(QString::number((-b-d)/(2*a)));
-           }
-           else
-                errorParam("нет вещественного корня");
-        }
-    }
-    else
-        errorParam("ошибка ввода");
-}
-bool MainWindow::getDoubleFromText(QString str, double & ret)
-{
-    bool ok;
-    ret = str.toDouble(&ok);
-    return ok;
+    Ex_1 ex(ui->param_A->text(), ui->param_B->text(), ui->param_C->text());
+    QString res[2];
+    ex.getStringResult(res);
+    ui->label_RES1->setText(res[0]);
+    ui->label_RES2->setText(res[1]);
 }
 
-void MainWindow::errorParam(QString mes)
+void MainWindow::calculate_2()      //Вычисление третьей стороны триугольника по двум и углу между ними
 {
-    ui->label_RES1->setText(mes);
-    ui->label_RES2->setText(mes);
+    Ex_2 ex(ui->param_S1->text(), ui->param_S2->text(), ui->param_ANG->text(), ui->param_DEG->isChecked());
+    QString res;
+    ex.getStringResult(&res);
+    ui->label_S3->setText(res);
+
 }
 
-void MainWindow::changeParams()
+void MainWindow::changeParams_1()
 {
-    errorParam("пересчитайте");
+    ui->label_RES1->setText("пересчитайте");
+    ui->label_RES2->setText("пересчитайте");
+}
+
+void MainWindow::changeParams_2()
+{
+    ui->label_S3->setText("пересчитайте");
+}
+
+void MainWindow::addText()  //Добавить текст
+{
+    QString txt1 = ui->text_1->toPlainText();
+    QString txt2 = ui->text_2->toPlainText();
+    ui->text_2->setPlainText(txt2 + txt1);
+
+}
+
+void MainWindow::setText()  //Заменить текст
+{
+    QString txt = ui->text_2->toPlainText();
+    ui->text_1->setPlainText(txt);
+
+}
+
+void MainWindow::redBold()  //Отформатировать текст
+{
+    QString txt = ui->text_1->toPlainText();
+    txt = "<b style=\"color: red\">" + txt + "</b>";
+    ui->text_3->setHtml(txt);
+
 }
 
 

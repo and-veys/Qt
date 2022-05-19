@@ -14,15 +14,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+private:
+    void setTab(QWidget ** w, int n);
 private:
     Ui::MainWindow *ui;
 private slots:
     void calculate_1();
-    void changeParams();
-private:
-    bool getDoubleFromText(QString str, double & dt);
-    void errorParam(QString mes);
+    void calculate_2();
+    void changeParams_1();
+    void changeParams_2();
+    void addText();
+    void setText();
+    void redBold();
 };
 #endif // MAINWINDOW_H
 
