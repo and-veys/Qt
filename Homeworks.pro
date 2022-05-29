@@ -17,10 +17,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    myliststandarditemmodel.cpp \
+    mytablestandarditemmodel.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    myliststandarditemmodel.h \
+    mytablestandarditemmodel.h
 
 FORMS += \
     mainwindow.ui
@@ -29,3 +33,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resourse.qrc
+
+
